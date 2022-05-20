@@ -1,11 +1,21 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 
 
 
 @Controller()
 export class GenderController{
   @Get()
-  findAll() {
+  findOne(){}
+  
+  @Get()
+  findAll(){}
 
-  }
+  @Post()
+  create(){}
+
+  @Patch()
+  update(){}
+
+  @Delete()
+  delete(){}
 }

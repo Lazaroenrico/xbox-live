@@ -1,8 +1,9 @@
 import { Module } from "@nestjs/common";
 import { GenderController } from "./gender.controller";
+import { GenderService } from "./gender.service";
 
 @Module({
   controllers: [GenderController],
-  providers: [],
+  providers: [GenderService],
 })
 export class GenderModule {}

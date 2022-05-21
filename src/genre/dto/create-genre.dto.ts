@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsPositive, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class CreateGenreDto {
   @IsString()
   @ApiProperty({
-    description: 'O número da mesa',
-    example: 1,
+    description: 'O Gênero do Game',
+    example: 'Terror',
   })
-  number: number;
+  genre: number;
 }

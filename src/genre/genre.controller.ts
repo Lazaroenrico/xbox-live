@@ -4,7 +4,7 @@ import { CreateGenreDto } from "./dto/create-genre.dto";
 import { GenreService } from "./genre.service";
 
 
-@ApiTags('genre')
+@ApiTags('Genre')
 @Controller('genre')
 export class GenreController{
   constructor(private readonly genreService: GenreService){}

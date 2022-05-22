@@ -1,13 +1,16 @@
-import { Injectable, NotFoundException, UnprocessableEntityException } from "@nestjs/common";
-import { PrismaService } from "src/prisma/prisma.service";
-import { CreateGamesDto } from "./dto/games-create.dto";
-import { UpdateGamesDto } from "./dto/games-update.dto";
-import { Games } from "./entities/game.entity";
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateGamesDto } from './dto/games-create.dto';
+import { UpdateGamesDto } from './dto/games-update.dto';
+import { Games } from './entities/game.entity';
 
 @Injectable()
-export class GamesService{
-  constructor(private readonly prisma: PrismaService){}
-
+export class GamesService {
+  constructor(private readonly prisma: PrismaService) {}
 
   async findById(id: string): Promise<Games> {
     const record = await this.prisma.games.findUnique({ where: { id } });
@@ -40,8 +43,7 @@ export class GamesService{
   }
 
   create(dto: CreateGamesDto): Promise<Games> {
-
-    const data: Games = {...dto}
+    const data: Games = { ...dto };
 
     return this.prisma.games.create({ data }).catch(this.handleError);
   }
@@ -59,5 +61,4 @@ export class GamesService{
       lastErrorLine || 'Alguem erro ocorreu ao executar a operação',
     );
   }
-
 }

@@ -1,4 +1,4 @@
-import { PartialType } from "@nestjs/swagger";
-import { CreateGamesDto } from "./games-create.dto";
+import { PartialType } from '@nestjs/swagger';
+import { CreateGamesDto } from './games-create.dto';
 
-export class UpdateGamesDto extends PartialType(CreateGamesDto){}
+export class UpdateGamesDto extends PartialType(CreateGamesDto) {}

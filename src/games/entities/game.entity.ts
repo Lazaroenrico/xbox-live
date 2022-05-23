@@ -3,5 +3,4 @@ export class Games{
   name: string;
   description: string;
   price: number;
-  assessment:number;
 }

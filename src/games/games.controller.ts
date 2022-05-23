@@ -1,9 +1,19 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post } from "@nestjs/common";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
-import { CreateGamesDto } from "./dto/games-create.dto";
-import { UpdateGamesDto } from "./dto/games-update.dto";
-import { Games } from "./entities/game.entity";
-import { GamesService } from "./games.service";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { CreateGamesDto } from './dto/games-create.dto';
+import { UpdateGamesDto } from './dto/games-update.dto';
+import { Games } from './entities/game.entity';
+import { GamesService } from './games.service';
 
 @ApiTags('Games')
 @Controller('Games')
@@ -17,7 +27,7 @@ export class GamesController {
   findAll(): Promise<Games[]> {
     return this.gamesService.findAll();
   }
-  
+
   @Get(':id')
   @ApiOperation({
     summary: 'Lista um game',
@@ -30,7 +40,7 @@ export class GamesController {
   @ApiOperation({
     summary: 'Criar uma game',
   })
-  create(@Body() dto:CreateGamesDto ): Promise<Games> {
+  create(@Body() dto: CreateGamesDto): Promise<Games> {
     return this.gamesService.create(dto);
   }
 

@@ -58,7 +58,7 @@ export class GamesService {
     const errorLines = error.message?.split('\n');
     const lastErrorLine = errorLines[errorLines.length - 1]?.trim();
     throw new UnprocessableEntityException(
-      lastErrorLine || 'Alguem erro ocorreu ao executar a operação',
+      lastErrorLine || 'Ocorreu um erro durante a execução do codigo',
     );
   }
 }

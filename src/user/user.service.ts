@@ -1,4 +1,6 @@
 import {
+  BadGatewayException,
+  BadRequestException,
   Injectable,
   NotFoundException,
   UnprocessableEntityException,
@@ -7,6 +9,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -33,9 +36,19 @@ export class UserService {
   async update(id: string, dto: UpdateUserDto): Promise<User> {
     await this.findById(id);
 
+    if (dto.Password) {
+      if (dto.Password != dto.Password) {
+        throw new BadRequestException('As senhas digitas estão diferentes.');
+      }
+    }
+
     delete dto.confirmPassword;
 
     const data: Partial<User> = { ...dto };
+
+    if (dto.Password) {
+      dto.Password = await bcrypt.hash(data.Password, 10);
+    }
 
     return this.prisma.user
       .update({
@@ -45,10 +58,17 @@ export class UserService {
       .catch(this.handleError);
   }
 
-  create(dto: CreateUserDto): Promise<User> {
+  async create(dto: CreateUserDto): Promise<User> {
     delete dto.confirmPassword;
 
-    const data: User = { ...dto };
+    if (dto.confirmPassword != dto.confirmPassword) {
+      throw new BadRequestException('As senhas digitas estão diferentes.');
+    }
+
+    const data: User = {
+      ...dto,
+      Password: await bcrypt.hash(dto.Password, 10),
+    };
 
     return this.prisma.user.create({ data }).catch(this.handleError);
   }

@@ -43,7 +43,7 @@ model Games {
 
 model Profile {
   id       String @id @default(uuid())
-  Title    String 
+  Title    String
   ImageUrl String
 
 
@@ -55,11 +55,12 @@ model Profile {
 }
 
 model User {
-  id    String  @id @default(uuid())
-  Name  String  @unique
-  Email String  @unique
-  CPF   String  @unique
-  Admin Boolean
+  id       String  @id @default(uuid())
+  Name     String  @unique
+  Password String
+  Email    String  @unique
+  CPF      String  @unique
+  Admin    Boolean
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

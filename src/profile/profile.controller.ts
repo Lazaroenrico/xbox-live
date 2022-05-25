@@ -57,6 +57,6 @@ export class ProfileController {
     summary: "Remover um produto ID"
   })
   delete(@Param('id') id: string) {
-    return this.profileService.delete(id);
+     this.profileService.delete(id);
   }
 }

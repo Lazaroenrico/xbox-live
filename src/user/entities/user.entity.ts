@@ -3,5 +3,7 @@ export class User {
   Name: string;
   Email: string;
   CPF: string;
-  Admin: Boolean;
+  Admin: boolean;
+  createdAt?: Date;
+  updateAt?: Date;
 }

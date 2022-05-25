@@ -11,9 +11,14 @@ CREATE TABLE "Genre" (
 -- CreateTable
 CREATE TABLE "Games" (
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
-    "price" INTEGER NOT NULL,
+    "Title" TEXT NOT NULL,
+    "Description" TEXT NOT NULL,
+    "Price" DOUBLE PRECISION NOT NULL,
+    "CoverImgUrl" TEXT NOT NULL,
+    "Year" INTEGER NOT NULL,
+    "ImdbScore" DOUBLE PRECISION NOT NULL,
+    "TrailerYoutubeUrl" TEXT NOT NULL,
+    "GameplayYoutubeUrl" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -24,4 +29,4 @@ CREATE TABLE "Games" (
 CREATE UNIQUE INDEX "Genre_genre_key" ON "Genre"("genre");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Games_name_key" ON "Games"("name");
+CREATE UNIQUE INDEX "Games_Title_key" ON "Games"("Title");

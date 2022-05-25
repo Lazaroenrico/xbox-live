@@ -1,6 +1,11 @@
-export class Games{
-  id?:string;
-  name: string;
-  description: string;
-  price: number;
+export class Games {
+  id?: string;
+  Title: string;
+  Description: string;
+  Price: number;
+  CoverImgUrl: string;
+  Year: number;
+  ImdbScore: number;
+  TrailerYoutubeUrl: string;
+  GameplayYoutubeUrl: string;
 }

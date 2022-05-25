@@ -10,19 +10,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Genre{
-  id String @id @default(uuid())
+model Genre {
+  id    String @id @default(uuid())
   genre String @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Games{
-  id String @id @default(uuid())
-  name String @unique
-  description String
-  price Int
+model Games {
+  id                 String @id @default(uuid())
+  Title              String @unique
+  Description        String
+  Price              Float
+  CoverImgUrl        String
+  Year               Int
+  ImdbScore          Float
+  TrailerYoutubeUrl  String
+  GameplayYoutubeUrl String
+
+
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

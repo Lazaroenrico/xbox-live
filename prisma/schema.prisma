@@ -14,8 +14,11 @@ model Genre {
   id    String @id @default(uuid())
   genre String @unique
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("genre")
+
 }
 
 model Games {
@@ -31,6 +34,35 @@ model Games {
 
 
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("games")
+
+}
+
+model Profile {
+  id       String @id @default(uuid())
+  Title    String @unique
+  ImageUrl String
+
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("profile")
+
+}
+
+model User {
+  id    String  @id @default(uuid())
+  Name  String
+  Email String
+  CPF   String
+  Admin Boolean
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("user")
 }

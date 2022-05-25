@@ -27,7 +27,7 @@ export class CreateGamesDto {
     example:
       'https://store-images.s-microsoft.com/image/apps.16347.14554784103656548.6c0bfca6-ceff-4368-9bde-2fe50f344136.007dce43-6492-46f2-bb2b-2b28df98fc3c',
   })
-  CoverImgURL: string;
+  CoverImgUrl: string;
 
   @IsNumber()
   @ApiProperty({

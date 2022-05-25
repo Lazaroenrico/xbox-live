@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsString, Max, Min } from 'class-validator';
 
 export class CreateGamesDto {
   @IsString()
@@ -35,6 +35,8 @@ export class CreateGamesDto {
   })
   Year: number;
 
+  @Min(0)
+  @Max(5)
   @IsNumber()
   @ApiProperty({
     example: 5,

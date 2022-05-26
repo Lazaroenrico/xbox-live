@@ -1,5 +1,4 @@
 import {
-  BadGatewayException,
   BadRequestException,
   Injectable,
   NotFoundException,
@@ -13,10 +12,25 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
+
+  private userSelector = {
+    id: true,
+    Name: true,
+    Password: false,
+    Email: true,
+    CPF: true,
+    Admin: true,
+    createdAt: true,
+    updatedAt: true,
+  }
+
   constructor(private readonly prisma: PrismaService) {}
 
   async findById(id: string): Promise<User> {
-    const record = await this.prisma.user.findUnique({ where: { id } });
+    const record = await this.prisma.user.findUnique({
+      where: { id },
+      select: this.userSelector,
+    });
 
     if (!record) {
       throw new NotFoundException(`Registro com ID '${id}' não encontrado.`);

@@ -32,11 +32,9 @@ export class ProfileService {
     id: string,
     updateProfileDto: UpdateProfileDto,
   ): Promise<Profile> {
-
     await this.findById(id);
 
     const data: Prisma.ProfileUpdateInput = {
-
       Title: updateProfileDto.Title,
       ImageUrl: updateProfileDto.ImageUrl,
       user: {
@@ -51,8 +49,9 @@ export class ProfileService {
       },
     };
 
-
-    return this.prisma.profile.update({where:{id}, data }).catch(handleError);
+    return this.prisma.profile
+      .update({ where: { id }, data })
+      .catch(handleError);
   }
 
   create(createProfileDto: CreateProfileDto): Promise<Profile> {
@@ -71,7 +70,24 @@ export class ProfileService {
       },
     };
 
-    return this.prisma.profile.create({ data }).catch(handleError);
+    return this.prisma.profile
+      .create({
+        data,
+        select: {
+          id: true,
+          user: {
+            select: {
+              Name: true,
+            },
+          },
+          games: {
+            select: {
+            Title: true,
+            },
+          },
+        },
+      })
+      .catch(handleError);
   }
 
   async delete(id: string) {

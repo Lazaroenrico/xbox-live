@@ -99,4 +99,5 @@ model ProfileGames {
   games   Games  @relation(fields: [gamesId], references: [id])
   gamesId String
 
+  @@map("profileGames")
 }

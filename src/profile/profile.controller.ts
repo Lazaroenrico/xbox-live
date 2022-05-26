@@ -40,7 +40,7 @@ export class ProfileController {
     summary: "Listar um perfil"
   })
   findOne(@Param('id') id: string) {
-    return this.profileService.findOne(+id);
+    return this.profileService.findOne(id);
   }
 
   @Patch(':id')
@@ -48,7 +48,7 @@ export class ProfileController {
     summary: "Editar um perfil pelo ID"
   })
   update(@Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
-    return this.profileService.update(+id, updateProfileDto);
+    return this.profileService.update(id, updateProfileDto);
   }
 
   @Delete(':id')
@@ -56,7 +56,7 @@ export class ProfileController {
   @ApiOperation({
     summary: "Remover um produto ID"
   })
-  remove(@Param('id') id: string) {
-    return this.profileService.remove(+id);
+  delete(@Param('id') id: string) {
+     this.profileService.delete(id);
   }
 }

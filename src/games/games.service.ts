@@ -4,6 +4,7 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { handleError } from 'src/utilis/handle-error.utilis';
 import { CreateGamesDto } from './dto/games-create.dto';
 import { UpdateGamesDto } from './dto/games-update.dto';
 import { Games } from './entities/game.entity';
@@ -39,13 +40,13 @@ export class GamesService {
         where: { id },
         data,
       })
-      .catch(this.handleError);
+      .catch(handleError);
   }
 
   create(dto: CreateGamesDto): Promise<Games> {
     const data: Games = { ...dto };
 
-    return this.prisma.games.create({ data }).catch(this.handleError);
+    return this.prisma.games.create({ data }).catch(handleError);
   }
 
   async delete(id: string) {
@@ -54,11 +55,4 @@ export class GamesService {
     await this.prisma.games.delete({ where: { id } });
   }
 
-  handleError(error: Error): undefined {
-    const errorLines = error.message?.split('\n');
-    const lastErrorLine = errorLines[errorLines.length - 1]?.trim();
-    throw new UnprocessableEntityException(
-      lastErrorLine || 'Ocorreu um erro durante a execução do codigo',
-    );
-  }
 }

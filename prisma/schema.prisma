@@ -11,14 +11,16 @@ datasource db {
 }
 
 model Genre {
+
   id    String @id @default(uuid())
   genre String @unique
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@map("genre")
+  games GenreGames[]
 
+  @@map("genre")
 }
 
 model Games {
@@ -32,37 +34,70 @@ model Games {
   TrailerYoutubeUrl  String
   GameplayYoutubeUrl String
 
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
+  genre GenreGames[]
+  profile ProfileGames[]
+
+  @@map("games")
+}
+
+model User {
+  id       String  @id @default(uuid())
+  Name     String  @unique
+  Password String
+  Email    String  @unique
+  CPF      String  @unique
+  Admin    Boolean
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@map("games")
+  Profiles Profile[]
 
+  @@map("user")
 }
 
 model Profile {
   id       String @id @default(uuid())
-  Title    String @unique
+  Title    String
   ImageUrl String
 
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+
+  games ProfileGames[]
 
   @@map("profile")
-
 }
 
-model User {
-  id    String  @id @default(uuid())
-  Name  String
-  Email String
-  CPF   String
-  Admin Boolean
+model GenreGames {
+  id String @id @default(uuid())
+
+  games   Games  @relation(fields: [gamesId], references: [id])
+  gamesId String
+
+  genre   Genre  @relation(fields: [genreId], references: [id])
+  genreId String
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@map("user")
+  @@map("genreGames")
+}
+
+model ProfileGames {
+  id String @id @default(uuid())
+
+  profile   Profile @relation(fields: [profileId], references: [id])
+  profileId String
+
+  games   Games  @relation(fields: [gamesId], references: [id])
+  gamesId String
+
+  @@map("profileGames")
 }

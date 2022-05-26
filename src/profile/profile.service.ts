@@ -1,26 +1,98 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { handleError } from 'src/utilis/handle-error.utilis';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { Profile } from './entities/profile.entity';
 
 @Injectable()
 export class ProfileService {
-  create(createProfileDto: CreateProfileDto) {
-    return 'This action adds a new profile';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async findById(id: string): Promise<Profile> {
+    const record = await this.prisma.profile.findUnique({ where: { id } });
+
+    if (!record) {
+      throw new NotFoundException(`Registro com ID '${id}' não encontrado.`);
+    }
+
+    return record;
   }
 
-  findAll() {
-    return `This action returns all profile`;
+  async findOne(id: string): Promise<Profile> {
+    return this.findById(id);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} profile`;
+  findAll(): Promise<Profile[]> {
+    return this.prisma.profile.findMany();
   }
 
-  update(id: number, updateProfileDto: UpdateProfileDto) {
-    return `This action updates a #${id} profile`;
+  async update(
+    id: string,
+    updateProfileDto: UpdateProfileDto,
+  ): Promise<Profile> {
+    await this.findById(id);
+
+    const data: Prisma.ProfileUpdateInput = {
+      Title: updateProfileDto.Title,
+      ImageUrl: updateProfileDto.ImageUrl,
+      user: {
+        connect: {
+          id: updateProfileDto.userId,
+        },
+      },
+      games: {
+        connect: {
+          id: updateProfileDto.gamesId,
+        },
+      },
+    };
+
+    return this.prisma.profile
+      .update({ where: { id }, data })
+      .catch(handleError);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} profile`;
+  create(createProfileDto: CreateProfileDto): Promise<Profile> {
+    const data: Prisma.ProfileCreateInput = {
+      Title: createProfileDto.Title,
+      ImageUrl: createProfileDto.ImageUrl,
+      user: {
+        connect: {
+          id: createProfileDto.userId,
+        },
+      },
+      games: {
+        connect: {
+          id: createProfileDto.gamesId,
+        },
+      },
+    };
+
+    return this.prisma.profile
+      .create({
+        data,
+        select: {
+          id: true,
+          user: {
+            select: {
+              Name: true,
+            },
+          },
+          games: {
+            select: {
+            Title: true,
+            },
+          },
+        },
+      })
+      .catch(handleError);
+  }
+
+  async delete(id: string) {
+    await this.findById(id);
+
+    await this.prisma.profile.delete({ where: { id } });
   }
 }

@@ -1,9 +1,9 @@
 import {
   Injectable,
-  NotFoundException,
-  UnprocessableEntityException,
+  NotFoundException
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { handleError } from 'src/utilis/handle-error.utilis';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { Profile } from './entities/profile.entity';
@@ -39,13 +39,13 @@ export class ProfileService {
         where: { id },
         data,
       })
-      .catch(this.handleError);
+      .catch(handleError);
   }
 
   create(dto: CreateProfileDto): Promise<Profile> {
     const data: Profile = { ...dto };
 
-    return this.prisma.profile.create({ data }).catch(this.handleError);
+    return this.prisma.profile.create({ data }).catch(handleError);
   }
 
   async delete(id: string) {
@@ -54,17 +54,4 @@ export class ProfileService {
     await this.prisma.profile.delete({ where: { id } });
   }
 
-  handleError(error: Error): undefined {
-    const errorLines = error.message?.split('\n');
-
-    const lastErrorLine = errorLines[errorLines.length - 1]?.trim();
-
-    if (!lastErrorLine) {
-      console.error(error);
-    }
-
-    throw new UnprocessableEntityException(
-      lastErrorLine || 'Ocorreu um erro durante a execução do codigo',
-    );
-  }
 }

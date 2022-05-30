@@ -5,6 +5,7 @@ export class User {
   Email: string;
   CPF: string;
   Admin: boolean;
+  
   createdAt?: Date;
   updateAt?: Date;
 }

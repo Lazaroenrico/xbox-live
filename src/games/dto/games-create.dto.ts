@@ -32,7 +32,7 @@ export class CreateGamesDto {
     example:
       'https://store-images.s-microsoft.com/image/apps.16347.14554784103656548.6c0bfca6-ceff-4368-9bde-2fe50f344136.007dce43-6492-46f2-bb2b-2b28df98fc3c',
   })
-  CoverImgUrl: string;
+  CoverImageUrl: string;
 
   @IsNumber()
   @ApiProperty({
@@ -64,4 +64,11 @@ export class CreateGamesDto {
       'https://www.youtube.com/watch?v=TsuRGkeN22I&list=PLrVhyUnEQMV83h4gQ1CPIHut5swRfuU0B',
   })
   GameplayYoutubeUrl: string;
+
+  @IsString()
+  @ApiProperty({
+    description: 'genero do game',
+    example: 'Terror',
+  })
+  genreType: string;
 }

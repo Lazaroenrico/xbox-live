@@ -28,63 +28,42 @@ export class ProfileService {
     return this.prisma.profile.findMany();
   }
 
-  async update(
-    id: string,
-    updateProfileDto: UpdateProfileDto,
-  ): Promise<Profile> {
+  async update(id: string, dto: UpdateProfileDto): Promise<Profile> {
     await this.findById(id);
 
-    const data: Prisma.ProfileUpdateInput = {
-      Title: updateProfileDto.Title,
-      ImageUrl: updateProfileDto.ImageUrl,
-      user: {
-        connect: {
-          id: updateProfileDto.userId,
-        },
-      },
-      gamesOwned: {
-        connect: {
-          id: updateProfileDto.gamesId,
-        },
-      },
-    };
-
     return this.prisma.profile
-      .update({ where: { id }, data })
+      .update({
+        where: { id },
+        data: {
+          Title: dto.Title,
+          ImageUrl: dto.ImageUrl,
+          userId: dto.userId,
+        },
+        include: { games: true },
+      })
       .catch(handleError);
   }
 
   async create(dto: CreateProfileDto): Promise<Profile> {
-
     return await this.prisma.profile
       .create({
         data: {
           Title: dto.Title,
           ImageUrl: dto.ImageUrl,
-          user: {
-            connect: {
-              id: dto.userId,
-            },
-          },
-          gamesOwned: {
+          userId: dto.userId,
+          games: {
             connect: {
               id: dto.gamesId,
             },
           },
         },
-        include: {
-          user: true,
-          gamesOwned: {
-            include: {
-              games: true,
-            },
-          },
-        },
+        include: { games: true, user: true },
       })
       .catch(handleError);
   }
 
   async delete(id: string) {
+    await this.findById(id);
     await this.prisma.profile.delete({ where: { id } });
   }
 }

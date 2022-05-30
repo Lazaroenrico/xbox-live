@@ -1,56 +1,58 @@
-import { Injectable, NotFoundException, UnprocessableEntityException } from "@nestjs/common";
-import { Genre } from "@prisma/client";
-import { PrismaService } from "src/prisma/prisma.service";
-import { handleError } from "src/utilis/handle-error.utilis";
-import { CreateGenreDto } from "./dto/create-genre.dto";
-import { UpdateGenreDto } from "./dto/update-genre.dto";
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
+import { Genre } from '@prisma/client';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { handleError } from 'src/utilis/handle-error.utilis';
+import { CreateGenreDto } from './dto/create-genre.dto';
+import { UpdateGenreDto } from './dto/update-genre.dto';
+import { Gender } from './entities/genre.entity';
 
 @Injectable()
 export class GenreService {
+  constructor(private readonly prisma: PrismaService) {}
 
-
-  constructor(private readonly prisma: PrismaService){}
-
-  async findById(id: string): Promise<Genre> {
-    const record = await this.prisma.genre.findUnique({ where: { id } });
+  async findById(name: string): Promise<Genre> {
+    const record = await this.prisma.genre.findUnique({ where: { name } });
 
     if (!record) {
-      throw new NotFoundException(`Registro com ID '${id}' não encontrado.`);
+      throw new NotFoundException(`Registro com ID '${name}' não encontrado.`);
     }
 
     return record;
   }
 
-  async findOne(id: string): Promise<Genre> {
-    return this.findById(id);
+  async findOne(name: string): Promise<Genre> {
+    return this.findById(name);
   }
 
   findAll(): Promise<Genre[]> {
     return this.prisma.genre.findMany();
   }
 
-  async update(id: string, dto: UpdateGenreDto): Promise<Genre> {
-    await this.findById(id);
+  async update(name: string, dto: UpdateGenreDto): Promise<Genre> {
+    await this.findById(name);
     const data: Partial<Genre> = { ...dto };
 
     return this.prisma.genre
       .update({
-        where: { id },
+        where: { name },
         data,
       })
       .catch(handleError);
   }
 
   create(dto: CreateGenreDto): Promise<Genre> {
-    const data = {genre: dto.genre}
+    const genre: Gender = { ...dto };
 
-    return this.prisma.genre.create({ data }).catch(handleError);
+    return this.prisma.genre.create({ data: genre }).catch(handleError);
   }
 
-  async delete(id: string) {
-    await this.findById(id);
+  async delete(name: string) {
+    await this.findById(name);
 
-    await this.prisma.genre.delete({ where: { id } });
+    await this.prisma.genre.delete({ where: { name } });
   }
-
 }

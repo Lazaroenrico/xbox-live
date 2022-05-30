@@ -1,15 +1,14 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { Prisma } from "@prisma/client";
-import { PrismaService } from "src/prisma/prisma.service";
-import { handleError } from "src/utilis/handle-error.utilis";
-import { CreateProfileDto } from "./dto/create-profile.dto";
-import { UpdateProfileDto } from "./dto/update-profile.dto";
-import { Profile } from "./entities/profile.entity";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { handleError } from 'src/utilis/handle-error.utilis';
+import { CreateProfileDto } from './dto/create-profile.dto';
+import { UpdateProfileDto } from './dto/update-profile.dto';
+import { Profile } from './entities/profile.entity';
 
 @Injectable()
 export class ProfileService {
-  constructor(private readonly prisma: PrismaService) {
-  }
+  constructor(private readonly prisma: PrismaService) {}
 
   async findById(id: string): Promise<Profile> {
     const record = await this.prisma.profile.findUnique({ where: { id } });
@@ -31,7 +30,7 @@ export class ProfileService {
 
   async update(
     id: string,
-    updateProfileDto: UpdateProfileDto
+    updateProfileDto: UpdateProfileDto,
   ): Promise<Profile> {
     await this.findById(id);
 
@@ -40,14 +39,14 @@ export class ProfileService {
       ImageUrl: updateProfileDto.ImageUrl,
       user: {
         connect: {
-          id: updateProfileDto.userId
-        }
+          id: updateProfileDto.userId,
+        },
       },
       gamesOwned: {
         connect: {
-          id: updateProfileDto.gamesId
-        }
-      }
+          id: updateProfileDto.gamesId,
+        },
+      },
     };
 
     return this.prisma.profile
@@ -55,39 +54,37 @@ export class ProfileService {
       .catch(handleError);
   }
 
-  async create(createProfileDto: CreateProfileDto): Promise<Profile> {
-    const profile = await this.prisma.profile
+  async create(dto: CreateProfileDto): Promise<Profile> {
+
+    return await this.prisma.profile
       .create({
         data: {
-          Title: createProfileDto.Title,
-          ImageUrl: createProfileDto.ImageUrl,
+          Title: dto.Title,
+          ImageUrl: dto.ImageUrl,
           user: {
             connect: {
-              id: createProfileDto.userId
-            }
+              id: dto.userId,
+            },
           },
           gamesOwned: {
             connect: {
-              id: createProfileDto.gamesId
-            }
-          }
+              id: dto.gamesId,
+            },
+          },
         },
         include: {
           user: true,
           gamesOwned: {
             include: {
-              games: true
-            }
-          }
-        }
+              games: true,
+            },
+          },
+        },
       })
       .catch(handleError);
-    return { User: profile.user, id: profile.id, Title: profile.Title, ImageUrl: profile.ImageUrl, games: profile.gamesOwned.map(g => g.games) };
   }
 
   async delete(id: string) {
-    await this.findById(id);
-
     await this.prisma.profile.delete({ where: { id } });
   }
 }

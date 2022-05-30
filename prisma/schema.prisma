@@ -37,7 +37,7 @@ model Games {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  genre GenreGames[]
+  genre   GenreGames[]
   profile ProfileGames[]
 
   @@map("games")
@@ -96,8 +96,8 @@ model ProfileGames {
   profile   Profile @relation(fields: [profileId], references: [id])
   profileId String
 
-  games   Games  @relation(fields: [gamesId], references: [id])
-  gamesId String
+  gamesOwned Games  @relation(fields: [gamesId], references: [id])
+  gamesId    String
 
   @@map("profileGames")
 }

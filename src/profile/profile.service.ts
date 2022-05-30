@@ -28,71 +28,42 @@ export class ProfileService {
     return this.prisma.profile.findMany();
   }
 
-  async update(
-    id: string,
-    updateProfileDto: UpdateProfileDto,
-  ): Promise<Profile> {
+  async update(id: string, dto: UpdateProfileDto): Promise<Profile> {
     await this.findById(id);
 
-    const data: Prisma.ProfileUpdateInput = {
-      Title: updateProfileDto.Title,
-      ImageUrl: updateProfileDto.ImageUrl,
-      user: {
-        connect: {
-          id: updateProfileDto.userId,
-        },
-      },
-      games: {
-        connect: {
-          id: updateProfileDto.gamesId,
-        },
-      },
-    };
-
     return this.prisma.profile
-      .update({ where: { id }, data })
+      .update({
+        where: { id },
+        data: {
+          Title: dto.Title,
+          ImageUrl: dto.ImageUrl,
+          userId: dto.userId,
+        },
+        include: { games: true },
+      })
       .catch(handleError);
   }
 
-  create(createProfileDto: CreateProfileDto): Promise<Profile> {
-    const data: Prisma.ProfileCreateInput = {
-      Title: createProfileDto.Title,
-      ImageUrl: createProfileDto.ImageUrl,
-      user: {
-        connect: {
-          id: createProfileDto.userId,
-        },
-      },
-      games: {
-        connect: {
-          id: createProfileDto.gamesId,
-        },
-      },
-    };
-
-    return this.prisma.profile
+  async create(dto: CreateProfileDto): Promise<Profile> {
+    return await this.prisma.profile
       .create({
-        data,
-        select: {
-          id: true,
-          user: {
-            select: {
-              Name: true,
-            },
-          },
+        data: {
+          Title: dto.Title,
+          ImageUrl: dto.ImageUrl,
+          userId: dto.userId,
           games: {
-            select: {
-            Title: true,
+            connect: {
+              id: dto.gamesId,
             },
           },
         },
+        include: { games: true, user: true },
       })
       .catch(handleError);
   }
 
   async delete(id: string) {
     await this.findById(id);
-
     await this.prisma.profile.delete({ where: { id } });
   }
 }

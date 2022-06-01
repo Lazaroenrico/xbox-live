@@ -30,7 +30,9 @@ export class ProfileService {
 
   async update(id: string, dto: UpdateProfileDto): Promise<Profile> {
     await this.findById(id);
+
     if (dto.gamesId) {
+
       return this.prisma.profile
         .update({
           where: { id },
@@ -44,9 +46,10 @@ export class ProfileService {
               },
             },
           },
-          
+          include: { games: true },
         })
         .catch(handleError);
+
     } else {
       return this.prisma.profile
         .update({
@@ -69,13 +72,8 @@ export class ProfileService {
           Title: dto.Title,
           ImageUrl: dto.ImageUrl,
           userId: dto.userId,
-          games: {
-            connect: {
-              id: dto.gamesId,
-            },
-          },
         },
-        include: { games: true, user: true },
+        include: { user: true },
       })
       .catch(handleError);
   }

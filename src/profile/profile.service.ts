@@ -30,18 +30,36 @@ export class ProfileService {
 
   async update(id: string, dto: UpdateProfileDto): Promise<Profile> {
     await this.findById(id);
-
-    return this.prisma.profile
-      .update({
-        where: { id },
-        data: {
-          Title: dto.Title,
-          ImageUrl: dto.ImageUrl,
-          userId: dto.userId,
-        },
-        include: { games: true },
-      })
-      .catch(handleError);
+    if (dto.gamesId) {
+      return this.prisma.profile
+        .update({
+          where: { id },
+          data: {
+            Title: dto.Title,
+            ImageUrl: dto.ImageUrl,
+            userId: dto.userId,
+            games: {
+              connect: {
+                id: dto.gamesId,
+              },
+            },
+          },
+          
+        })
+        .catch(handleError);
+    } else {
+      return this.prisma.profile
+        .update({
+          where: { id },
+          data: {
+            Title: dto.Title,
+            ImageUrl: dto.ImageUrl,
+            userId: dto.userId,
+          },
+          include: { games: true },
+        })
+        .catch(handleError);
+    }
   }
 
   async create(dto: CreateProfileDto): Promise<Profile> {

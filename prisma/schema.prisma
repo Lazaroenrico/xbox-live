@@ -65,3 +65,4 @@ model Profile {
 
   @@map("profile")
 }
+

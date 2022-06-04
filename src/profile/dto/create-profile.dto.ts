@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsUrl, IsUUID } from 'class-validator';
+import { IsOptional, IsString, IsUrl, IsUUID } from 'class-validator';
 
 export class CreateProfileDto {
   @IsString()
@@ -24,7 +24,7 @@ export class CreateProfileDto {
   })
   userId: string;
 
-
+  @IsOptional()
   @IsUUID()
   @ApiProperty({
     description: 'ID do Game',

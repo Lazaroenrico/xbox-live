@@ -40,11 +40,11 @@ model Genre {
 
 model User {
   id       String  @id @default(uuid())
-  Name     String
+  Name     String  @unique
   Email    String  @unique
   Password String
   CPF      String  @unique
-  Admin  Boolean
+  Admin    Boolean @map("is_Admin") @default(false)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

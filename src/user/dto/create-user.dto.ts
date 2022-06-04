@@ -16,13 +16,13 @@ export class CreateUserDto {
   })
   @ApiProperty({
     description: 'Senha do usuário para login',
-    example: 'Abcd@1234',
+    example: 'Naoseias2senhas!',
   })
   Password: string;
 
   @ApiProperty({
     description: 'A confirmação de senha deve ser igual a senha.',
-    example: 'Abcd@1234',
+    example: 'Naoseias2senhas!',
   })
   confirmPassword: string;
 

@@ -13,8 +13,9 @@ async function bootstrap() {
     .setDescription('Aplicação para os generos dos jogos.')
     .setVersion('1.0.0')
     .addTag('status')
-    .addTag('Profile')
     .addTag('User')
+    .addTag('Auth')
+    .addTag('Profile')
     .addTag('Genre')
     .addTag('Games')
     .build();

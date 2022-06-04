@@ -1,7 +1,7 @@
 import {
   BadRequestException,
   Injectable,
-  NotFoundException
+  NotFoundException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -12,7 +12,6 @@ import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
-
   private userSelector = {
     id: true,
     Name: true,
@@ -22,7 +21,7 @@ export class UserService {
     Admin: true,
     createdAt: true,
     updatedAt: true,
-  }
+  };
 
   constructor(private readonly prisma: PrismaService) {}
 
@@ -73,11 +72,10 @@ export class UserService {
   }
 
   async create(dto: CreateUserDto): Promise<User> {
-    delete dto.confirmPassword;
-
     if (dto.confirmPassword != dto.confirmPassword) {
       throw new BadRequestException('As senhas digitas estão diferentes.');
     }
+    delete dto.confirmPassword;
 
     const data: User = {
       ...dto,
@@ -92,5 +90,4 @@ export class UserService {
 
     await this.prisma.user.delete({ where: { id } });
   }
-
 }

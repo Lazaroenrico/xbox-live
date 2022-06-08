@@ -9,7 +9,7 @@ datasource db {
 
 model Games {
   id                 String @id @default(uuid())
-  Title              String
+  Title              String @unique
   Price              Float
   CoverImageUrl      String
   Description        String

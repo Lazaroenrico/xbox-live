@@ -8,20 +8,24 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { ProfileService } from './profile.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('Profile')
+@UseGuards(AuthGuard())
+@ApiBearerAuth()
 @Controller('profile')
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
   @Post()
   @ApiOperation({
-    summary: "Criar um perfil"
+    summary: 'Criar um perfil',
   })
   create(@Body() createProfileDto: CreateProfileDto) {
     return this.profileService.create(createProfileDto);
@@ -29,7 +33,7 @@ export class ProfileController {
 
   @Get()
   @ApiOperation({
-    summary: "Listar todos os perfis"
+    summary: 'Listar todos os perfis',
   })
   findAll() {
     return this.profileService.findAll();
@@ -37,7 +41,7 @@ export class ProfileController {
 
   @Get(':id')
   @ApiOperation({
-    summary: "Listar um perfil"
+    summary: 'Listar um perfil',
   })
   findOne(@Param('id') id: string) {
     return this.profileService.findOne(id);
@@ -45,7 +49,7 @@ export class ProfileController {
 
   @Patch(':id')
   @ApiOperation({
-    summary: "Editar um perfil pelo ID"
+    summary: 'Editar um perfil pelo ID',
   })
   update(@Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
     return this.profileService.update(id, updateProfileDto);
@@ -54,9 +58,9 @@ export class ProfileController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({
-    summary: "Remover um produto ID"
+    summary: 'Remover um produto ID',
   })
   delete(@Param('id') id: string) {
-     this.profileService.delete(id);
+    this.profileService.delete(id);
   }
 }

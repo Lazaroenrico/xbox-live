@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
+import { PassportModule } from '@nestjs/passport';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
 import { GamesModule } from './games/games.module';
 import { GenreModule } from './genre/genre.module';
 import { PrismaModule } from './prisma/prisma.module';
@@ -8,8 +10,8 @@ import { ProfileModule } from './profile/profile.module';
 import { UserModule } from './user/user.module';
 
 @Module({
-  imports: [GenreModule, PrismaModule, GamesModule, ProfileModule, UserModule],
+  imports: [GenreModule, PrismaModule, GamesModule, ProfileModule, UserModule, AuthModule, PassportModule.register({ defaultStrategy: 'jwt' })],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

@@ -13,9 +13,9 @@ export class AuthService {
   ) {}
 
   async login(loginDto: LoginDto): Promise<LoginResponseDto> {
-    const { Name, Password } = loginDto;
+    const { Email, Password } = loginDto;
 
-    const user = await this.prisma.user.findUnique({ where: { Name } });
+    const user = await this.prisma.user.findUnique({ where: { Email } });
 
     if (!user) {
       throw new UnauthorizedException('Usuário e/ou senha inválidos');
@@ -32,7 +32,7 @@ export class AuthService {
     delete user.Password;
 
     return {
-      token: this.jwtService.sign({ Name }),
+      token: this.jwtService.sign({ Email }),
       user,
     };
   }

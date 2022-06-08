@@ -8,16 +8,18 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
-@ApiTags('User')
+@ApiTags('user')
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Post()
   @ApiOperation({
@@ -28,6 +30,9 @@ export class UserController {
   }
 
   @Get()
+
+  @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Listar todos os Usuários',
   })
@@ -36,6 +41,9 @@ export class UserController {
   }
 
   @Get(':id')
+
+  @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Listar um usuário',
   })
@@ -44,6 +52,8 @@ export class UserController {
   }
 
   @Patch(':id')
+  @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Editar um usuário',
   })
@@ -57,6 +67,6 @@ export class UserController {
     summary: 'Remover um usuário'
   })
   delete(@Param('id') id: string) {
-   this.userService.delete(id);
+    this.userService.delete(id);
   }
 }

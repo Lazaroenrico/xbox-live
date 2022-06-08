@@ -8,15 +8,20 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateGamesDto } from './dto/games-create.dto';
 import { UpdateGamesDto } from './dto/games-update.dto';
 import { Games } from './entities/game.entity';
 import { GamesService } from './games.service';
 
-@ApiTags('Games')
-@Controller('Games')
+
+@ApiTags('games')
+@UseGuards(AuthGuard())
+@ApiBearerAuth()
+@Controller('games')
 export class GamesController {
   constructor(private readonly gamesService: GamesService) {}
 

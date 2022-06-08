@@ -17,13 +17,6 @@ export class CreateProfileDto {
   })
   ImageUrl: string;
 
-  @IsUUID()
-  @ApiProperty({
-    description: 'ID do usuário',
-    example: '64cfc520-5c65-4ca1-a3ec-a3092c939440',
-  })
-  userId: string;
-
   @IsOptional()
   @IsUUID()
   @ApiProperty({

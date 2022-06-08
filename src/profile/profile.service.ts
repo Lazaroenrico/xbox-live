@@ -8,7 +8,7 @@ import { Profile } from './entities/profile.entity';
 
 @Injectable()
 export class ProfileService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async findById(id: string): Promise<Profile> {
     const record = await this.prisma.profile.findUnique({ where: { id } });
@@ -28,7 +28,7 @@ export class ProfileService {
     return this.prisma.profile.findMany();
   }
 
-  async update(id: string, dto: UpdateProfileDto): Promise<Profile> {
+  async update(id: string, userId: string, dto: UpdateProfileDto): Promise<Profile> {
     await this.findById(id);
 
     if (dto.gamesId) {
@@ -39,7 +39,7 @@ export class ProfileService {
           data: {
             Title: dto.Title,
             ImageUrl: dto.ImageUrl,
-            userId: dto.userId,
+            userId: userId,
             games: {
               connect: {
                 id: dto.gamesId,
@@ -57,7 +57,7 @@ export class ProfileService {
           data: {
             Title: dto.Title,
             ImageUrl: dto.ImageUrl,
-            userId: dto.userId,
+            userId: userId,
           },
           include: { games: true },
         })
@@ -65,13 +65,13 @@ export class ProfileService {
     }
   }
 
-  async create(dto: CreateProfileDto): Promise<Profile> {
+  async create(dto: CreateProfileDto, userId:string): Promise<Profile> {
     return await this.prisma.profile
       .create({
         data: {
           Title: dto.Title,
           ImageUrl: dto.ImageUrl,
-          userId: dto.userId,
+          userId: userId,
         },
         include: { user: true },
       })

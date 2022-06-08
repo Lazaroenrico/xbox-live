@@ -65,7 +65,7 @@ export class ProfileService {
     }
   }
 
-  async create(dto: CreateProfileDto, userId:string): Promise<Profile> {
+  async create(userId: string, dto: CreateProfileDto): Promise<Profile> {
     return await this.prisma.profile
       .create({
         data: {

@@ -25,6 +25,8 @@ model Games {
   genres   Genre[]
   profiles Profile[]
 
+  gamesFavorite GamesFavorite[]
+
   @@map("game")
 }
 
@@ -44,7 +46,7 @@ model User {
   Email    String  @unique
   Password String
   CPF      String  @unique
-  Admin    Boolean @map("is_Admin") @default(false)
+  Admin    Boolean @default(false) @map("is_Admin")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -60,8 +62,18 @@ model Profile {
   user     User   @relation(fields: [userId], references: [id])
   userId   String @map("user_id")
 
-  games Games[]
+  games         Games[]
+  gamesFavorite GamesFavorite[]
 
 
   @@map("profile")
+}
+
+model GamesFavorite {
+  id String @id @default(uuid())
+
+  profile   Profile @relation(fields: [profileId], references: [id])
+  profileId String  @unique @map("profile_id")
+
+  games Games[]
 }

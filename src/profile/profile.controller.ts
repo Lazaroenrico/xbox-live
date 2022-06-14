@@ -57,6 +57,11 @@ export class ProfileController {
     return this.profileService.update(id, user.id, updateProfileDto);
   }
 
+  @Patch('favorite/:id')
+  favorite(@Param('id') id: string, @Body() dto: UpdateProfileDto){
+    return this.profileService.addNullandRemove(id,dto.gamesFavorite)
+  }
+
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({

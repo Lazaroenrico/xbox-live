@@ -21,7 +21,15 @@ export class CreateProfileDto {
   @IsUUID()
   @ApiProperty({
     description: 'ID do Game',
-    example: 'f9660c8b-ed33-416b-9491-ed01aa41a794',
+    example: '2e664a52-e89d-4c79-9b37-fb6b0c68ed4b',
   })
   gamesId?: string;
+
+  @IsOptional()
+  @IsUUID()
+  @ApiProperty({
+    description: 'ID do Game',
+    example: '2e664a52-e89d-4c79-9b37-fb6b0c68ed4b',
+  })
+  gamesFavorite?: string;
 }

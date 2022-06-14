@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Genre } from '@prisma/client';
+import { User } from 'src/user/entities/user.entity';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { UpdateGenreDto } from './dto/update-genre.dto';
 import { GenreService } from './genre.service';
@@ -32,16 +33,16 @@ export class GenreController {
   @ApiOperation({
     summary: 'Criar uma genero',
   })
-  create(@Body() dto: CreateGenreDto): Promise<Genre> {
-    return this.genreService.create(dto);
+  create(@Body() user:User, dto: CreateGenreDto): Promise<Genre> {
+    return this.genreService.create(user, dto);
   }
 
   @Patch(':id')
   @ApiOperation({
     summary: 'Atualizar um genero pelo id',
   })
-  update(@Param('id') id: string, @Body() dto: UpdateGenreDto): Promise<Genre> {
-    return this.genreService.update(id, dto);
+  update(@Param('id') user:User, id: string, @Body() dto: UpdateGenreDto): Promise<Genre> {
+    return this.genreService.update(user, id, dto);
   }
 
   @Delete(':id')
@@ -49,7 +50,7 @@ export class GenreController {
   @ApiOperation({
     summary: 'Remover um genero pelo id',
   })
-  delete(@Param('id') id: string) {
-    this.genreService.delete(id);
+  delete(@Param('id') user:User, id: string) {
+    this.genreService.delete(user, id);
   }
 }

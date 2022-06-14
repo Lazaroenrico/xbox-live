@@ -1,17 +1,18 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { handleError } from 'src/utilis/handle-error.utilis';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
-import { Profile } from './entities/profile.entity';
 
 @Injectable()
 export class ProfileService {
   constructor(private readonly prisma: PrismaService) { }
 
-  async findById(id: string): Promise<Profile> {
-    const record = await this.prisma.profile.findUnique({ where: { id } });
+  async findById(id: string) {
+    const record = await this.prisma.profile.findUnique({
+      where: { id, },
+      include: { gamesFavorite: { select: { id: true, games: true } } }
+    });
 
     if (!record) {
       throw new NotFoundException(`Registro com ID '${id}' não encontrado.`);
@@ -20,19 +21,19 @@ export class ProfileService {
     return record;
   }
 
-  async findOne(id: string): Promise<Profile> {
+  async findOne(id: string) {
     return this.findById(id);
   }
 
-  findAll(): Promise<Profile[]> {
-    return this.prisma.profile.findMany();
+  findAll() {
+    return this.prisma.profile.findMany(
+      { include: { user: true, games: true, gamesFavorite: { select: { games: { select: { Title: true } } } } } }
+    );
   }
 
-  async update(id: string, userId: string, dto: UpdateProfileDto): Promise<Profile> {
+  async update(id: string, userId: string, dto: UpdateProfileDto) {
     await this.findById(id);
-
     if (dto.gamesId) {
-
       return this.prisma.profile
         .update({
           where: { id },
@@ -65,7 +66,58 @@ export class ProfileService {
     }
   }
 
-  async create(userId: string, dto: CreateProfileDto): Promise<Profile> {
+  // ------------------------------------------------------------------ 
+  async addNullandRemove(profileId: string, gameId: string) {
+    const data = await this.findById(profileId);
+    let favorite = false;
+    if(data.gamesFavorite!=null){
+
+      data.gamesFavorite.games.map((game)=>{
+        if(gameId===game.id){
+          favorite = true;
+        }
+      })
+    }else{
+      return this.prisma.gamesFavorite.create({
+        data:{
+        profile: {
+          connect:{   id: profileId },
+        },
+        games: {
+          connect:{  id: gameId }
+        }
+        }
+      })
+    }
+    if(favorite){
+      return await this.prisma.gamesFavorite.update({
+        where:{
+          id: data.gamesFavorite.id,
+
+        },
+        data:{
+          games:{
+            disconnect:{ id: gameId, }
+          }
+        }
+      })
+    }else{
+      return await this.prisma.gamesFavorite.update({
+        where:{
+          id: data.gamesFavorite.id,
+
+        },
+        data:{
+          games:{
+            connect:{  id: gameId,  }
+          }
+        }
+      })
+    }
+  }
+  // ------------------------------------------------------------------
+
+  async create(userId: string, dto: CreateProfileDto) {
     return await this.prisma.profile
       .create({
         data: {

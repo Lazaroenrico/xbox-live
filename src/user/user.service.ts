@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -42,8 +43,12 @@ export class UserService {
     return this.findById(id);
   }
 
-  findAll(): Promise<User[]> {
-    return this.prisma.user.findMany();
+  findAll(user:User): Promise<User[]> {
+    if(user.Admin){
+      return this.prisma.user.findMany();
+    }else {
+      throw new UnauthorizedException('O usuário não é um admin, contate-o o admin para acessar essa informação !')
+    }
   }
 
   async update(id: string, dto: UpdateUserDto): Promise<User> {

@@ -7,6 +7,46 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id       String  @id @default(uuid())
+  Name     String  @unique
+  Email    String  @unique
+  Password String
+  CPF      String  @unique
+  Admin    Boolean @default(false) @map("is_Admin")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  profile Profile[]
+  @@map("user")
+}
+
+model Profile {
+  id       String @id @default(uuid())
+  Title    String
+  ImageUrl String
+  gamesFavorite GamesFavorite?
+
+  user     User   @relation(fields: [userId], references: [id])
+  userId   String @map("user_id")
+
+  games         Games[]
+
+
+  @@map("profile")
+}
+
+model Genre {
+  name String @id @unique
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  games Games[]
+  @@map("genre")
+}
+
 model Games {
   id                 String @id @default(uuid())
   Title              String @unique
@@ -28,45 +68,6 @@ model Games {
   gamesFavorite GamesFavorite[]
 
   @@map("game")
-}
-
-model Genre {
-  name String @id @unique
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  games Games[]
-  @@map("genre")
-}
-
-model User {
-  id       String  @id @default(uuid())
-  Name     String  @unique
-  Email    String  @unique
-  Password String
-  CPF      String  @unique
-  Admin    Boolean @default(false) @map("is_Admin")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  profile Profile[]
-  @@map("user")
-}
-
-model Profile {
-  id       String @id @default(uuid())
-  Title    String
-  ImageUrl String
-  user     User   @relation(fields: [userId], references: [id])
-  userId   String @map("user_id")
-
-  games         Games[]
-  gamesFavorite GamesFavorite[]
-
-
-  @@map("profile")
 }
 
 model GamesFavorite {

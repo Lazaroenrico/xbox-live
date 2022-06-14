@@ -11,7 +11,7 @@ export class HomepageController {
   constructor(private readonly homepageService: HomepageService) { }
 
   @Get()
-  findOne(@Param('id') id: string) {
-    return this.homepageService.findOne(id)
+  findAll(@Param('id') id: string) {
+    return this.homepageService.findAll(id)
   }
 }

@@ -66,50 +66,50 @@ export class ProfileService {
     }
   }
 
-  // ------------------------------------------------------------------ 
+  // ------------------------------------------------------------------
   async addNullandRemove(profileId: string, gameId: string) {
     const data = await this.findById(profileId);
     let favorite = false;
-    if(data.gamesFavorite!=null){
+    if (data.gamesFavorite != null) {
 
-      data.gamesFavorite.games.map((game)=>{
-        if(gameId===game.id){
+      data.gamesFavorite.games.map((game) => {
+        if (gameId === game.id) {
           favorite = true;
         }
       })
-    }else{
+    } else {
       return this.prisma.gamesFavorite.create({
-        data:{
-        profile: {
-          connect:{   id: profileId },
-        },
-        games: {
-          connect:{  id: gameId }
-        }
-        }
-      })
-    }
-    if(favorite){
-      return await this.prisma.gamesFavorite.update({
-        where:{
-          id: data.gamesFavorite.id,
-
-        },
-        data:{
-          games:{
-            disconnect:{ id: gameId, }
+        data: {
+          profile: {
+            connect: { id: profileId },
+          },
+          games: {
+            connect: { id: gameId }
           }
         }
       })
-    }else{
+    }
+    if (favorite) {
       return await this.prisma.gamesFavorite.update({
-        where:{
+        where: {
           id: data.gamesFavorite.id,
 
         },
-        data:{
-          games:{
-            connect:{  id: gameId,  }
+        data: {
+          games: {
+            disconnect: { id: gameId, }
+          }
+        }
+      })
+    } else {
+      return await this.prisma.gamesFavorite.update({
+        where: {
+          id: data.gamesFavorite.id,
+
+        },
+        data: {
+          games: {
+            connect: { id: gameId, }
           }
         }
       })

@@ -47,7 +47,6 @@ export class HomepageService {
     })
     const profileF = data.gamesFavorite
 
-
     return {
       games: gameL,
       favorite: profileF,

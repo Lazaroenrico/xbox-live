@@ -7,14 +7,41 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id       String  @id @default(uuid())
-  Name     String  @unique
-  Email    String  @unique
-  Password String
-  CPF      String  @unique
-  Admin    Boolean @default(false) @map("is_Admin")
+model Games {
+  id                 String          @id @default(uuid())
+  Title              String
+  Price              Float
+  CoverImageUrl      String
+  Description        String
+  Year               Int
+  ImdbScore          Int
+  TrailerYoutubeUrl  String
+  GameplayYoutubeUrl String
+  createdAt          DateTime        @default(now()) @map("created_at")
+  updatedAt          DateTime        @updatedAt @map("updated_at")
+  genres             Genre[]
+  profiles           Profile[]
+  gamesFavorite      GamesFavorite[]
 
+  @@map("game")
+}
+
+model Genre {
+  name      String   @id @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  games     Games[]
+
+  @@map("genre")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  Name      String   @unique
+  Email     String   @unique
+  Password  String
+  CPF       String   @unique
+  Admin     Boolean  @default(false) @map("is_Admin")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -23,51 +50,15 @@ model User {
 }
 
 model Profile {
-  id       String @id @default(uuid())
-  Title    String
-  ImageUrl String
+  id            String         @id @default(uuid())
+  Title         String
+  ImageUrl      String
+  user          User           @relation(fields: [userId], references: [id])
+  userId        String         @map("user_id")
+  games         Games[]
   gamesFavorite GamesFavorite?
 
-  user     User   @relation(fields: [userId], references: [id])
-  userId   String @map("user_id")
-
-  games         Games[]
-
-
   @@map("profile")
-}
-
-model Genre {
-  name String @id @unique
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  games Games[]
-  @@map("genre")
-}
-
-model Games {
-  id                 String @id @default(uuid())
-  Title              String @unique
-  Price              Float
-  CoverImageUrl      String
-  Description        String
-  Year               Int
-  ImdbScore          Int
-  TrailerYoutubeUrl  String
-  GameplayYoutubeUrl String
-
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  genres   Genre[]
-  profiles Profile[]
-
-  gamesFavorite GamesFavorite[]
-
-  @@map("game")
 }
 
 model GamesFavorite {

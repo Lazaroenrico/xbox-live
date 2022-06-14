@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { Games } from 'src/games/entities/game.entity';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -7,9 +6,8 @@ export class HomepageService {
   constructor(private readonly prisma: PrismaService) { }
 
   async findAll(id: string) {
-
     const data = await this.prisma.profile.findUnique({
-      where: { id },
+      where: { id: id },
       select: {
         Title: true,
         ImageUrl: true,
@@ -26,7 +24,7 @@ export class HomepageService {
       }
     })
 
-    let gameL = []
+    const gameL = []
     const fullGnr = await this.prisma.genre.findMany()
     const profileG = data.games
 

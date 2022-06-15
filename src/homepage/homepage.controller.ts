@@ -10,7 +10,7 @@ import { HomepageService } from './homepage.service';
 export class HomepageController {
   constructor(private readonly homepageService: HomepageService) { }
 
-  @Get()
+  @Get(':id')
   findAll(@Param('id') id: string) {
     return this.homepageService.findAll(id)
   }

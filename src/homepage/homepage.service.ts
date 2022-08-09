@@ -1,55 +1,55 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class HomepageService {
-  constructor(private readonly prisma: PrismaService) { }
-
+  constructor(private readonly prisma: PrismaService) {}
   async findAll(id: string) {
-    const data = await this.prisma.profile.findUnique({
-      where: { id: id },
+    const profileData = await this.prisma.profile.findUnique({
+      where: {
+        id: id,
+      },
       select: {
         Title: true,
         ImageUrl: true,
         games: {
           include: {
-            genres: true
-          }
+            genres: true,
+          },
         },
-        gamesFavorite: {
-          select: {
-            games: true,
+        gamesFavorite:{
+          select:{
+            games: true
           }
         }
-      }
-    })
 
-    const gameL = []
-    const fullGnr = await this.prisma.genre.findMany()
-    const profileG = data.games
-
-    fullGnr.map((genre) => {
-      const order = []
-      profileG.map((game) => {
-        if (game.genres[0].name === genre.name) {
-          order.push(game.Title)
+    }});
+    const listGames = profileData.games;
+    const favoriteGames = profileData.gamesFavorite;
+    const orderedGames = [];
+    const allGenres = await this.prisma.genre.findMany();
+    allGenres.map((genre) => {
+      const gamesperGenre = [];
+      const IdGame = [];
+      listGames.map((game) => {
+        if (game.genres[0].name == genre.name) {
+          gamesperGenre.push(game.Title);
+          IdGame.push(game.id);
         }
-      })
-      const genrePorgame = {
-        Title: order,
+      });
+      const genderObj = {
         genre: genre.name,
+        title: gamesperGenre,
+        id: IdGame,
+      };
+      if (gamesperGenre.length !== 0) {
+        orderedGames.push(genderObj);
       }
-
-      if (order.length !== 0) {
-        gameL.push(genrePorgame)
-      }
-
-    })
-    const profileF = data.gamesFavorite
-
+    });
     return {
-      games: gameL,
-      favorite: profileF,
-    }
+      games: orderedGames,
+      favoriteGames: favoriteGames,
+    };
   }
 }

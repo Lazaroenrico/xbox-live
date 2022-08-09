@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { profile } from 'console';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { handleError } from 'src/utilis/handle-error.utilis';
 import { CreateProfileDto } from './dto/create-profile.dto';
@@ -27,7 +28,7 @@ export class ProfileService {
 
   findAll() {
     return this.prisma.profile.findMany(
-      { include: { user: true, games: true, gamesFavorite: { select: { games: { select: { Title: true } } } } } }
+      { include: { user: true, games: true, gamesFavorite: { select: { games: { select: { Title: true, id: true } } } } } }
     );
   }
 
@@ -130,8 +131,17 @@ export class ProfileService {
       .catch(handleError);
   }
 
-  async delete(id: string) {
-    await this.findById(id);
+  async delete(userId: string, id: string) {
+    const profile = await this.findById(id);
+    if(profile.gamesFavorite){
+    await this.prisma.gamesFavorite.delete({
+      where:{
+        id:profile.gamesFavorite.id
+      }
+    })
     await this.prisma.profile.delete({ where: { id } });
+  }else{
+    await this.prisma.profile.delete({ where: { id } });
+  }
   }
 }
